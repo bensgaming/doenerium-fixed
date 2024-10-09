@@ -1,10 +1,9 @@
 name: Daily Repo Fork
 
-# Triggers the workflow both on a daily schedule and manually
 on:
   schedule:
     - cron: "0 0 * * *"  # Run daily at 00:00 UTC
-  workflow_dispatch:      # Allows manual trigger via the GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
   reset_fork:
@@ -13,7 +12,7 @@ jobs:
     steps:
       - name: Delete Existing Repo
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Your GitHub PAT
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use the new PAT
         run: |
           curl -X DELETE \
           -H "Authorization: token $GITHUB_TOKEN" \
@@ -22,7 +21,7 @@ jobs:
 
       - name: Fork Update-Stealer Repo Again
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use the new PAT
         run: |
           curl -X POST \
           -H "Authorization: token $GITHUB_TOKEN" \
