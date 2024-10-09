@@ -1,0 +1,31 @@
+name: Daily Repo Fork
+
+# Triggers the workflow both on a daily schedule and manually
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Run daily at 00:00 UTC
+  workflow_dispatch:      # Allows manual trigger via the GitHub Actions UI
+
+jobs:
+  reset_fork:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete Existing Repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Your GitHub PAT
+        run: |
+          curl -X DELETE \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/bensgaming/Update-Stealer
+
+      - name: Fork Update-Stealer Repo Again
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/benchoigaming/Update-Stealer/forks \
+          -d '{"organization": "bensgaming"}'
